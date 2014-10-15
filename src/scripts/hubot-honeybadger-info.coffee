@@ -107,14 +107,14 @@ class HoneybadgerInfo
       out += "Error information for #{result.message}"
       if result.request
         if result.request.context
-          out += "\tContext:"
-          out += ("\t\t#{key}: #{result.request.context[key]}") for key in _.keys result.request.context
+          out += "\tContext:\n"
+          out += ("\t\t#{key}: #{result.request.context[key]}\n") for key in _.keys result.request.context
         if result.request.session
-          out += "\tSession:"
-          out += ("\t\t#{key}: #{result.request.session[key]}") for key in _.keys result.request.session
+          out += "\tSession:\n"
+          out += ("\t\t#{key}: #{result.request.session[key]}\n") for key in _.keys result.request.session
         if result.request.params
-          out += "\tParams:"
-          out += ("\t\t#{key}: #{result.request.params[key]}") for key in _.keys result.request.params
+          out += "\tParams:\n"
+          out += ("\t\t#{key}: #{result.request.params[key]}\n") for key in _.keys result.request.params
       msg.send out
 
   getData: (msg, url, callback) ->
