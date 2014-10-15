@@ -26,9 +26,6 @@ url = require('url')
 querystring = require('querystring')
 util = require('util')
 _ = require('underscore')
-_.str = require('underscore.string')
-_.mixin(_.str.exports())
-_.str.include('Underscore.string', 'string')
 
 ascii_table = require('ascii-table')
 
@@ -41,9 +38,10 @@ class HoneybadgerInfo
 
     url_base = "https://api.honeybadger.io/v1/projects/"
     url_suffix = "?auth_token="
-    @project_api_url = url_base + url_suffix
-    @fault_api_url   = url_base + "#ID#/faults" + url_suffix
-    @notice_api_url  = url_base + "#ID#/faults/#FAULT#/notices" + url_suffix
+    @project_api_url      = url_base + url_suffix
+    @fault_api_url        = url_base + "#ID#/faults" + url_suffix
+    @single_fault_api_url = url_base + "#ID#/faults/#FAULT#" + url_suffix
+    @notice_api_url       = url_base + "#ID#/faults/#FAULT#/notices" + url_suffix
     
     # now that all the variables are set up, set up the hear/respond hooks
     @setupHooks()
@@ -80,6 +78,7 @@ class HoneybadgerInfo
     @getData msg, call_url, @parseFaults
 
   getNotices: (msg, project_id, fault_id) ->
+    @project_id = project_id
     call_url = @notice_api_url.replace( "#ID#", project_id ).replace( "#FAULT#", fault_id) + @api_key
     @getData msg, call_url, @parseNotices
 
@@ -97,25 +96,31 @@ class HoneybadgerInfo
     table.addRow f.id,f.klass,( if f.component then f.component else ''),(if f.resolved? then 'true' else 'false') for f in data.results
     msg.send table.toString()
     
-  parseNotices: (msg, data) ->
-    console.log 'noticies: ', data
+  parseNotices: (msg, data) =>
     if data.results.length == 0
       msg.send "No current noticies for that fault"
     else
       result = data.results[0]
-      out = ""
-      out += "Error information for #{result.message}"
-      if result.request
-        if result.request.context
-          out += "\tContext:\n"
-          out += ("\t\t#{key}: #{result.request.context[key]}\n") for key in _.keys result.request.context
-        if result.request.session
-          out += "\tSession:\n"
-          out += ("\t\t#{key}: #{result.request.session[key]}\n") for key in _.keys result.request.session
-        if result.request.params
-          out += "\tParams:\n"
-          out += ("\t\t#{key}: #{result.request.params[key]}\n") for key in _.keys result.request.params
-      msg.send out
+      fault_url = @single_fault_api_url.replace("#ID#", @project_id).replace("#FAULT#",result.fault_id) + @api_key
+      callback = (the_msg, fault_data) ->
+        if fault_data.resolved
+          msg.send "Woo! Way to go!"
+        else
+          out = ""
+          out += "Error information for #{result.message}\n"
+          if result.request
+            if result.request.context
+              out += "\tContext:\n"
+              out += ("\t\t#{key}: #{result.request.context[key]}\n") for key in _.keys result.request.context
+            if result.request.session
+              out += "\tSession:\n"
+              out += ("\t\t#{key}: #{result.request.session[key]}\n") for key in _.keys result.request.session
+            if result.request.params
+              out += "\tParams:\n"
+              out += ("\t\t#{key}: #{result.request.params[key]}\n") for key in _.keys result.request.params
+          msg.send out
+    
+      @getData msg, fault_url, callback
 
   getData: (msg, url, callback) ->
     @robot.http(url)
