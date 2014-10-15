@@ -8,6 +8,8 @@
 #
 # Commands:
 #   hubot honeybadger list projects - returns summary of projects in Honeybadger
+#   hubot honeybadger list faults ID - returns a summary of faults for the given project ID
+#   hubot honeybadger list notices ID FAULT_ID - returns a summary of notices for a given fault
 #
 # Notes:
 #   Copyright (c) 2014 Sean Hagen
@@ -62,12 +64,12 @@ class HoneybadgerInfo
         return
       @getFaults msg, msg.match[1]
 
-    @robot.respond /honeybadger list notices (\d+) (\d})/, (msg) ->
+    @robot.respond /honeybadger list notices (\d+) (\d+)/, (msg) =>
       unless msg.match[1] and msg.match[2]
         msg.send "Need a project ID and fault ID, use 'honeybadger list faults' to get faults"
         msg.send "\t and 'honeybadger list projects' to get projects"
         return
-      @getNoticies msg, msg.match[1], msg.match[2]
+      @getNotices msg, msg.match[1], msg.match[2]
 
   getProjects: (msg) ->
     call_url = @project_api_url + @api_key
@@ -96,14 +98,22 @@ class HoneybadgerInfo
     msg.send table.toString()
     
   parseNotices: (msg, data) ->
-    result = data.results[0]
-    msg.send "Error information for #{result.message}"
-    msg.send "\tContext:"
-    msg.send("\t\t#{key}: #{result.request.context[key]}") for key in _.keys result.request.context
-    msg.send "\tSession:"
-    msg.send("\t\t#{key}: #{result.request.session[key]}") for key in _.keys result.request.session
-    msg.send "\tParams:"
-    msg.send("\t\t#{key}: #{result.request.params[key]}") for key in _.keys result.request.params
+    console.log 'noticies: ', data
+    if data.results.length == 0
+      msg.send "No current noticies for that fault"
+    else
+      result = data.results[0]
+      msg.send "Error information for #{result.message}"
+      if result.request
+        if result.request.context
+          msg.send "\tContext:"
+          msg.send("\t\t#{key}: #{result.request.context[key]}") for key in _.keys result.request.context
+        if result.request.session
+          msg.send "\tSession:"
+          msg.send("\t\t#{key}: #{result.request.session[key]}") for key in _.keys result.request.session
+        if result.request.params
+          msg.send "\tParams:"
+          msg.send("\t\t#{key}: #{result.request.params[key]}") for key in _.keys result.request.params
 
   getData: (msg, url, callback) ->
     @robot.http(url)
@@ -111,12 +121,18 @@ class HoneybadgerInfo
       .get() (err, res, body) =>
         if err
           msg.send "Error getting data from Honeybadger: #{err}"
+          return
         data = null
+
         try
           data = JSON.parse(body)
         catch error
           msg.send "Honeybadger gave us invalid JSON!"
           msg.send "Honeybadger just don't give a fuck: #{error}"
+          return
+
+        if data.errors
+          msg.send "Unable to get data from Honeybadger: #{data.errors}"
           return
 
         callback msg, data
