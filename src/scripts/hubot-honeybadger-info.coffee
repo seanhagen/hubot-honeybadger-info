@@ -103,17 +103,19 @@ class HoneybadgerInfo
       msg.send "No current noticies for that fault"
     else
       result = data.results[0]
-      msg.send "Error information for #{result.message}"
+      out = ""
+      out += "Error information for #{result.message}"
       if result.request
         if result.request.context
-          msg.send "\tContext:"
-          msg.send("\t\t#{key}: #{result.request.context[key]}") for key in _.keys result.request.context
+          out += "\tContext:"
+          out += ("\t\t#{key}: #{result.request.context[key]}") for key in _.keys result.request.context
         if result.request.session
-          msg.send "\tSession:"
-          msg.send("\t\t#{key}: #{result.request.session[key]}") for key in _.keys result.request.session
+          out += "\tSession:"
+          out += ("\t\t#{key}: #{result.request.session[key]}") for key in _.keys result.request.session
         if result.request.params
-          msg.send "\tParams:"
-          msg.send("\t\t#{key}: #{result.request.params[key]}") for key in _.keys result.request.params
+          out += "\tParams:"
+          out += ("\t\t#{key}: #{result.request.params[key]}") for key in _.keys result.request.params
+      msg.send out
 
   getData: (msg, url, callback) ->
     @robot.http(url)
