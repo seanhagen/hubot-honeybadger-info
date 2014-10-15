@@ -1,0 +1,21 @@
+{
+  "name": "hubot-honeybadger-info",
+  "version": "0.0.1",
+  "dependencies": {
+    "ascii-table": {
+      "version": "0.0.4",
+      "from": "ascii-table@",
+      "resolved": "https://registry.npmjs.org/ascii-table/-/ascii-table-0.0.4.tgz"
+    },
+    "underscore": {
+      "version": "1.7.0",
+      "from": "underscore@",
+      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.7.0.tgz"
+    },
+    "underscore.string": {
+      "version": "2.3.3",
+      "from": "underscore.string@",
+      "resolved": "https://registry.npmjs.org/underscore.string/-/underscore.string-2.3.3.tgz"
+    }
+  }
+}
