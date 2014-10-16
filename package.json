@@ -1,6 +1,6 @@
 {
   "name": "hubot-honeybadger-info",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Hubot plugin to grab information about Honeybadger.io faults",
   "main": "src/scripts/hubot-honeybadger-info",
   "scripts": {
