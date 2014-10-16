@@ -1,6 +1,6 @@
 {
   "name": "hubot-honeybadger-info",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Hubot plugin to grab information about Honeybadger.io faults",
   "main": "src/scripts/hubot-honeybadger-info",
   "scripts": {
@@ -50,6 +50,5 @@
   "dependencies": {
     "ascii-table": "0.0.4",
     "underscore": "^1.7.0",
-    "underscore.string": "^2.3.3"
   }
 }
