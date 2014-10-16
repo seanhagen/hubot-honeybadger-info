@@ -28,6 +28,17 @@ You can also use the following commands:
     hubot honeybadger list faults ID - returns a summary of faults for a given project ID
     hubot honeybadger list noticies PROJECT_ID FAULT_ID - returns a summary of noticies for the given FAULT_ID
 
+## TODO
+
+Here are some things that I'd like to add
+ - better or more detailed output for a project, fault, or notice
+ - ability to drill down into notices or faults and get specific info ( like a stack trace )
+ - filter summary list by environment, resolved, or ignored 
+ - ability to ignore notices or faults
+ - ability to resolve notices or faults
+ - get a list of assigned notices/faults for a specific user
+ - get a list of notices/faults that were created or occurred after a specific time
+
 ## Contribution
 
 Fork and pr, man.
