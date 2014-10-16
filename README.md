@@ -7,7 +7,12 @@ When someone posts a Honeybadger.io fault URL, gets the information about that f
 
 ## Installation
 
-Run `npm install --save hubot-honeybadger-info` inside your Hubot directory.
+Run `npm install --save hubot-honeybadger-info` inside your Hubot directory. That will add `hubot-honeybadger-info` to your `package.json`.
+
+Add `hubot-honeybadger-info` to your `external-scripts.json`
+
+    $ cat external-scripts.json
+    $ ["hubot-honeybadger-info"]
 
 ## Configuration
 
