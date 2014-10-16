@@ -1,7 +1,7 @@
 # Prints information about Honeybadger.io when it sees a fault URL
 #
 # Dependencies:
-#   none
+#   underscore
 #
 # Configuration:
 #   HUBOT_HONEYBADGER_API_KEY: your Honeybadger.io API key ( get it from your profile page )
