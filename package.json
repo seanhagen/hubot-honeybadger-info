@@ -49,6 +49,6 @@
   },
   "dependencies": {
     "ascii-table": "0.0.4",
-    "underscore": "^1.7.0",
+    "underscore": "^1.7.0"
   }
 }
